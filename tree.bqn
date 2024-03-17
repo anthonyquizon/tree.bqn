@@ -42,4 +42,22 @@ Draw ⇐ {
 
       {•Out ⊢◶(" ─┬├┐│"∾ch)¨𝕩}˘h⌈n                          # convert ids to characters and print
     }¨⍷r
+
+
+
+# parse namespaces and to parent tree
+ParseNs ← {
+     𝕊 𝕩 :  
+       ⟨s,d,t⟩ ← 0 𝕊 𝕩 
+       m←0⊸=∘≠¨s ⋄ p←(Parent d) ⋄ r←(↕(≠s)-(≠/m))⌾((¬m)⊸/) (≠s)⥊¯1 ⋄ n← s↩(¬m)/s
+       {ptr⇐[p,t,r], n⇐n}
+  ;d 𝕊 ns : 6≡•Type ns ? 
+    children←∾¨´{ ⟨⟨𝕩⟩, (d+1), ⟨'k'⟩⟩ ∾¨ (d+2) ParseNs (ns •ns.Get 𝕩) } ¨•ns.Keys ns
+    ⟨⟨""⟩, ⟨d⟩, ⟨'o'⟩⟩ ∾¨ children 
+  ;d 𝕊 𝕩 : 0≡•Type 𝕩 ? 
+    { 𝕊 s : ∧´2⊸≡∘•Type¨s ? ⟨⟨s⟩, ⟨d⟩, ⟨'v'⟩⟩ ; # parse string
+      𝕊 𝕩 : ∾¨´{ (d) ParseNs 𝕩}¨𝕩 
+    } 𝕩
+  ;𝕨 𝕊 𝕩 : 1≡•Type 𝕩 ? 𝕨 𝕊 •Fmt 𝕩
 }
+
